@@ -1,0 +1,11 @@
+<Application x:Class="CodexStatusBar.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnExplicitShutdown">
+  <Application.Resources>
+    <SolidColorBrush x:Key="PanelBrush" Color="#F21B2432" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF8B5CF6" />
+    <SolidColorBrush x:Key="MutedBrush" Color="#FF9CA3AF" />
+    <SolidColorBrush x:Key="TextBrush" Color="#FFF9FAFB" />
+  </Application.Resources>
+</Application>

@@ -1,0 +1,27 @@
+# .NET build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+/artifacts/
+/release/
+
+# Visual Studio and editor state
+.vs/
+.idea/
+*.user
+*.suo
+
+# Local application data and diagnostics
+*.db
+*.db-shm
+*.db-wal
+settings.json
+CodexStatusBar-*.log*
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Windows shell metadata
+Thumbs.db
+Desktop.ini

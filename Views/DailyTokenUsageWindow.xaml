@@ -1,0 +1,173 @@
+<Window x:Class="CodexStatusBar.Views.DailyTokenUsageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Daily Token Usage" Icon="/CodexStatusBar;component/Assets/CodexStatusBar.ico"
+        Width="1200" Height="790" MinWidth="940" MinHeight="620"
+        Background="#FF0B1220" Foreground="#FFF3F6FC" WindowStartupLocation="CenterScreen">
+  <Window.Resources>
+    <SolidColorBrush x:Key="Surface" Color="#FF151F30"/>
+    <SolidColorBrush x:Key="SurfaceRaised" Color="#FF1B283B"/>
+    <SolidColorBrush x:Key="Muted" Color="#FFA3B1C5"/>
+    <Style x:Key="SegmentButton" TargetType="Button">
+      <Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="#FFA3B1C5"/>
+      <Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="10,6"/><Setter Property="Margin" Value="1"/>
+      <Setter Property="FontSize" Value="11"/><Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+        <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#FF26364D"/></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#FF344760"/></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.5"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="Background" Value="#FF25344A"/><Setter Property="Foreground" Value="#FFF3F6FC"/>
+      <Setter Property="BorderBrush" Value="#FF3A4B63"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="13,8"/><Setter Property="Margin" Value="4,0,0,0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+        <Border x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#FF30435E"/></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="Chrome" Property="Background" Value="#FF3A4B63"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style TargetType="ComboBox">
+      <Setter Property="Background" Value="#FF1B283B"/><Setter Property="Foreground" Value="#FF101827"/>
+      <Setter Property="Padding" Value="7,5"/><Setter Property="MinWidth" Value="145"/>
+      <Setter Property="BorderBrush" Value="#FF3A4B63"/><Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style TargetType="ToolTip">
+      <Setter Property="Background" Value="#FF101927"/><Setter Property="Foreground" Value="#FFF3F6FC"/>
+      <Setter Property="BorderBrush" Value="#FF455A75"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="12"/><Setter Property="HasDropShadow" Value="True"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ToolTip">
+        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="9" Padding="{TemplateBinding Padding}">
+          <ContentPresenter/>
+        </Border>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+  </Window.Resources>
+  <Grid Margin="24">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Margin="0,0,0,20">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel VerticalAlignment="Center">
+        <TextBlock Text="Token analytics" FontSize="26" FontWeight="Bold"/>
+        <TextBlock x:Name="UpdatedText" Text="Loading local usage history…" Foreground="{StaticResource Muted}" FontSize="12" Margin="1,5,0,0"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+        <StackPanel><TextBlock Text="PERIOD" FontSize="10" Foreground="{StaticResource Muted}" Margin="3,0,0,5"/>
+          <Border Background="#FF101927" BorderBrush="#FF2B394D" BorderThickness="1" CornerRadius="7" Padding="2">
+            <StackPanel Orientation="Horizontal">
+              <Button x:Name="Range7Button" Content="7 days" Style="{StaticResource SegmentButton}" Tag="7" Click="Period_Click"/>
+              <Button x:Name="Range30Button" Content="30 days" Style="{StaticResource SegmentButton}" Tag="30" Click="Period_Click"/>
+              <Button x:Name="Range90Button" Content="90 days" Style="{StaticResource SegmentButton}" Tag="90" Click="Period_Click"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <StackPanel Margin="12,0,0,0"><TextBlock Text="MODEL" FontSize="10" Foreground="{StaticResource Muted}" Margin="3,0,0,5"/>
+          <ComboBox x:Name="ModelPicker" MinWidth="160" SelectionChanged="ModelPicker_SelectionChanged"/>
+        </StackPanel>
+        <Button Content="Refresh" Click="Reload_Click" VerticalAlignment="Bottom" Margin="12,0,0,0"/>
+        <Button Content="Close" Click="Close_Click" VerticalAlignment="Bottom"/>
+      </StackPanel>
+    </Grid>
+
+    <UniformGrid Grid.Row="1" Rows="1" Margin="0,0,0,18">
+      <Border Background="{StaticResource Surface}" CornerRadius="10" Padding="15" Margin="0,0,9,0">
+        <StackPanel><TextBlock Text="TOTAL TOKENS" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock x:Name="TotalTokensText" Text="—" FontSize="23" FontWeight="SemiBold" Margin="0,5,0,1"/><TextBlock x:Name="CoverageText" Text="Waiting for local samples" FontSize="11" Foreground="{StaticResource Muted}"/></StackPanel>
+      </Border>
+      <Border Background="{StaticResource Surface}" CornerRadius="10" Padding="15" Margin="3,0,6,0">
+        <StackPanel><TextBlock Text="INPUT TOKENS" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock x:Name="InputTotalText" Text="—" FontSize="23" FontWeight="SemiBold" Margin="0,5,0,1"/><TextBlock x:Name="InputCoverageText" Text="Across all models" FontSize="11" Foreground="{StaticResource Muted}"/></StackPanel>
+      </Border>
+      <Border Background="{StaticResource Surface}" CornerRadius="10" Padding="15" Margin="3,0,6,0">
+        <StackPanel><TextBlock Text="OUTPUT TOKENS" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock x:Name="OutputTotalText" Text="—" FontSize="23" FontWeight="SemiBold" Margin="0,5,0,1"/><TextBlock x:Name="OutputCoverageText" Text="Across all models" FontSize="11" Foreground="{StaticResource Muted}"/></StackPanel>
+      </Border>
+      <Border Background="{StaticResource Surface}" CornerRadius="10" Padding="15" Margin="3,0,0,0">
+        <StackPanel><TextBlock Text="CHATS WITH DATA" FontSize="10" Foreground="{StaticResource Muted}"/><TextBlock x:Name="TrackedChatsText" Text="—" FontSize="23" FontWeight="SemiBold" Margin="0,5,0,1"/><TextBlock x:Name="TrackedHistoryText" Text="In selected period" FontSize="11" Foreground="{StaticResource Muted}"/></StackPanel>
+      </Border>
+    </UniformGrid>
+
+    <Grid Grid.Row="2">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="2.55*"/><ColumnDefinition Width="0.95*"/></Grid.ColumnDefinitions>
+      <Border Grid.Column="0" Background="{StaticResource Surface}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <Grid Grid.Row="0" Margin="0,0,0,12">
+            <StackPanel><TextBlock x:Name="ChartTitleText" Text="Daily token usage" FontSize="16" FontWeight="SemiBold"/><TextBlock x:Name="ChartSubtitleText" Text="Model share by day · local time" FontSize="11" Foreground="{StaticResource Muted}" Margin="0,4,0,0"/></StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <StackPanel x:Name="MetricControls" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="MEASURE" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <Border Background="#FF101927" BorderBrush="#FF2B394D" BorderThickness="1" CornerRadius="7" Padding="2">
+                  <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MetricTotalButton" Content="Total" Style="{StaticResource SegmentButton}" Tag="total" Click="Metric_Click"/>
+                    <Button x:Name="MetricInputButton" Content="Input" Style="{StaticResource SegmentButton}" Tag="input" Click="Metric_Click"/>
+                    <Button x:Name="MetricOutputButton" Content="Output" Style="{StaticResource SegmentButton}" Tag="output" Click="Metric_Click"/>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+              <StackPanel x:Name="SelectedModelLegend" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                <Ellipse Width="8" Height="8" Fill="#FF9B8AFB" Margin="10,0,5,0"/><TextBlock Text="Input" FontSize="10" Foreground="#FFB7C2D1"/>
+                <Ellipse Width="8" Height="8" Fill="#FF37CDB0" Margin="12,0,5,0"/><TextBlock Text="Output" FontSize="10" Foreground="#FFB7C2D1"/>
+              </StackPanel>
+              <StackPanel x:Name="TotalLegend" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                <Line X1="0" X2="15" Y1="5" Y2="5" Stroke="#FFFFD58A" StrokeThickness="2" Margin="10,0,5,0"/>
+                <TextBlock x:Name="TotalLegendText" Text="Total" FontSize="10" Foreground="#FFB7C2D1"/>
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+          <Grid Grid.Row="1" MinHeight="260">
+            <Canvas x:Name="ChartCanvas" ClipToBounds="True"/>
+            <TextBlock x:Name="EmptyText" Text="No local token usage is available for this period yet." Foreground="{StaticResource Muted}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                       Margin="55,0" Visibility="Collapsed" IsHitTestVisible="False"/>
+          </Grid>
+          <Border Grid.Row="2" Background="#FF101927" BorderBrush="#FF29374B" BorderThickness="1" CornerRadius="9" Padding="11" Margin="0,9,0,0">
+            <Grid>
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="1.55*"/><ColumnDefinition Width="1*"/><ColumnDefinition Width="1*"/><ColumnDefinition Width="1*"/><ColumnDefinition Width="0.8*"/></Grid.ColumnDefinitions>
+                <StackPanel><TextBlock Text="DAY DETAILS" FontSize="9" Foreground="{StaticResource Muted}"/><TextBlock x:Name="SelectedDayDateText" Text="Move over a chart day" FontSize="14" FontWeight="SemiBold" Margin="0,3,8,0"/></StackPanel>
+                <StackPanel Grid.Column="1"><TextBlock Text="TOTAL" FontSize="9" Foreground="{StaticResource Muted}"/><TextBlock x:Name="SelectedDayTotalText" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+                <StackPanel Grid.Column="2"><TextBlock Text="INPUT" FontSize="9" Foreground="{StaticResource Muted}"/><TextBlock x:Name="SelectedDayInputText" Text="—" FontSize="15" FontWeight="SemiBold" Foreground="#FFB8A9FF" Margin="0,3,0,0"/></StackPanel>
+                <StackPanel Grid.Column="3"><TextBlock Text="OUTPUT" FontSize="9" Foreground="{StaticResource Muted}"/><TextBlock x:Name="SelectedDayOutputText" Text="—" FontSize="15" FontWeight="SemiBold" Foreground="#FF66DDC8" Margin="0,3,0,0"/></StackPanel>
+                <StackPanel Grid.Column="4"><TextBlock Text="CHATS" FontSize="9" Foreground="{StaticResource Muted}"/><TextBlock x:Name="SelectedDayChatsText" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+              </Grid>
+              <TextBlock x:Name="SelectedDayModelSummaryText" Grid.Row="1" Text="Hover a bar or point to inspect that day."
+                         FontSize="11" Foreground="{StaticResource Muted}" Margin="0,7,0,0" TextWrapping="Wrap"/>
+            </Grid>
+          </Border>
+          <TextBlock x:Name="ChartFootnoteText" Grid.Row="3" Text="Daily totals come from local Codex usage records. Missing dates are not treated as zero."
+                     Foreground="{StaticResource Muted}" FontSize="10" Margin="0,10,0,0" TextWrapping="Wrap"/>
+        </Grid>
+      </Border>
+
+      <Border Grid.Column="1" Background="{StaticResource Surface}" CornerRadius="12" Padding="17">
+        <Grid>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <TextBlock Text="Model mix" FontSize="16" FontWeight="SemiBold"/>
+          <TextBlock x:Name="ModelBreakdownSubtitleText" Grid.Row="1" Text="Measured token share" FontSize="11" Foreground="{StaticResource Muted}" Margin="0,5,0,12"/>
+          <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="ModelBreakdownPanel"/>
+          </ScrollViewer>
+          <Border Grid.Row="3" Background="#FF111A28" CornerRadius="8" Padding="10" Margin="0,12,0,0">
+            <TextBlock x:Name="ModelDataNoteText" Text="Model is read from local rollout metadata."
+                       Foreground="{StaticResource Muted}" FontSize="10" TextWrapping="Wrap"/>
+          </Border>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <TextBlock x:Name="StatusText" Grid.Row="3" Foreground="{StaticResource Muted}" Margin="2,13,0,0" FontSize="11" TextTrimming="CharacterEllipsis"/>
+  </Grid>
+</Window>
